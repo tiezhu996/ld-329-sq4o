@@ -25,6 +25,7 @@ export interface Need {
 
 export interface Match {
   id: number;
+  needId: number;
   provider: string;
   learner: string;
   offerSkill: string;
@@ -32,6 +33,35 @@ export interface Match {
   score: number;
   commonSlots: string[];
   recommendation: string;
+  basis: string[];
+  status: string;
+}
+
+export interface FilteredCandidate {
+  pair: string;
+  skill: string;
+  need: string;
+  reason: string;
+}
+
+export interface Invitation {
+  id: number;
+  needId: number;
+  needTitle: string;
+  fromUser: string;
+  toUser: string;
+  status: string;
+  note: string;
+}
+
+export interface MatchBoard {
+  viewer: string;
+  viewerCredit: number;
+  canInvite: boolean;
+  rules: string[];
+  recommendations: Match[];
+  filtered: FilteredCandidate[];
+  invitations: Invitation[];
 }
 
 export interface Appointment {

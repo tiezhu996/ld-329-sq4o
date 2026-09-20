@@ -27,6 +27,7 @@ type Need struct {
 
 type Match struct {
 	ID             int      `json:"id"`
+	NeedID         int      `json:"needId"`
 	Provider       string   `json:"provider"`
 	Learner        string   `json:"learner"`
 	OfferSkill     string   `json:"offerSkill"`
@@ -34,6 +35,46 @@ type Match struct {
 	Score          int      `json:"score"`
 	CommonSlots    []string `json:"commonSlots"`
 	Recommendation string   `json:"recommendation"`
+	Basis          []string `json:"basis"`
+	Status         string   `json:"status"`
+}
+
+// User 平台账号，信用分决定能否进入推荐或发起邀请
+type User struct {
+	Name        string `json:"name"`
+	Campus      string `json:"campus"`
+	CreditScore int    `json:"creditScore"`
+	CreditLevel string `json:"creditLevel"`
+}
+
+// FilteredCandidate 被规则过滤的候选及原因
+type FilteredCandidate struct {
+	Pair   string `json:"pair"`
+	Skill  string `json:"skill"`
+	Need   string `json:"need"`
+	Reason string `json:"reason"`
+}
+
+// Invitation 需求下的交换邀请，状态为终态机：待确认→已接受/已失效
+type Invitation struct {
+	ID        int    `json:"id"`
+	NeedID    int    `json:"needId"`
+	NeedTitle string `json:"needTitle"`
+	FromUser  string `json:"fromUser"`
+	ToUser    string `json:"toUser"`
+	Status    string `json:"status"`
+	Note      string `json:"note"`
+}
+
+// MatchBoard 匹配页数据：推荐、过滤原因、邀请终态与规则说明
+type MatchBoard struct {
+	Viewer          string             `json:"viewer"`
+	ViewerCredit    int                `json:"viewerCredit"`
+	CanInvite       bool               `json:"canInvite"`
+	Rules           []string           `json:"rules"`
+	Recommendations []Match            `json:"recommendations"`
+	Filtered        []FilteredCandidate `json:"filtered"`
+	Invitations     []Invitation       `json:"invitations"`
 }
 
 type Appointment struct {

@@ -46,6 +46,19 @@ CREATE TABLE IF NOT EXISTS reviews (
   content TEXT NOT NULL
 );
 
+-- 技能交换邀请：同一需求最多保留 3 项“待确认”邀请，
+-- 任一被接受后其余立即失效；status 取值：待确认/已接受/已失效
+CREATE TABLE IF NOT EXISTS invitations (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  need_id BIGINT NOT NULL,
+  from_user VARCHAR(80) NOT NULL,
+  to_user VARCHAR(80) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT '待确认',
+  note VARCHAR(200) NOT NULL DEFAULT '',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_invitations_need_status (need_id, status)
+);
+
 INSERT INTO users(name, major, credit_score, credit_level) VALUES
 ('林澈', '新闻传播 2023', 91, '黄金导师'),
 ('孟野', '音乐表演 2022', 88, '白银协作者'),

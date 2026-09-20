@@ -34,16 +34,7 @@
         </el-table>
       </div>
 
-      <div class="panel">
-        <h2>智能匹配</h2>
-        <FeatureCard v-for="match in overview.matches" :key="match.id" :title="`${match.provider} × ${match.learner}`" :description="match.recommendation">
-          <template #tag><el-tag type="warning">{{ match.score }}%</el-tag></template>
-          <p class="muted">{{ match.offerSkill }} ↔ {{ match.wantedSkill }}</p>
-          <div class="tag-row">
-            <el-tag v-for="slot in match.commonSlots" :key="slot">{{ slot }}</el-tag>
-          </div>
-        </FeatureCard>
-      </div>
+      <MatchBoardPanel />
 
       <div class="panel">
         <h2>预约确认</h2>
@@ -90,6 +81,7 @@
 import { onMounted, ref } from 'vue';
 import AppHeader from '../components/AppHeader.vue';
 import FeatureCard from '../components/FeatureCard.vue';
+import MatchBoardPanel from '../components/MatchBoardPanel.vue';
 import MetricCard from '../components/MetricCard.vue';
 import RadarChart from '../components/RadarChart.vue';
 import { fetchOverview } from '../services/storage.service';
