@@ -20,7 +20,9 @@ docker compose up -d
 
 - 技能发布与管理：技能描述、熟练度、可交换时间段、回报类型和作品凭证。
 - 需求发布与浏览：按类别、校区、期望时间和响应数量查看求助需求。
-- 智能匹配推荐：展示互补技能、匹配度、共同可用时间和推荐理由。
+- 智能匹配推荐：同校区且未来一周至少有一段连续共同时隙才进入推荐，卡片展示匹配度、匹配依据、连续可交换时段和推荐理由；不满足约束的候选单独列出并给出过滤原因（信用不足 / 校区不一致 / 无连续共同时段）。
+- 信用权限：信用分低于 80 的账号只保留浏览权限，不会进入推荐，也不能发起或确认邀请。
+- 交换邀请与终态：每个需求最多保留 3 项有效邀请；需求方接受其一后其余邀请立即失效，「已接受 / 已失效」均为终态，重复或并发确认只成功一次，刷新页面后可回读全部状态。
 - 交换预约与确认：记录双方确认状态、时间、地点和协商议程。
 - 评价与信用体系：评分、文字评价、信用分和信用等级用于推荐权重。
 - 消息通知系统：会话未读红点、系统通知和预约提醒。
@@ -61,18 +63,19 @@ go run ./cmd/server
 ```text
 .
 ├── frontend
-│   ├── src/components
+│   ├── src/components/match   # 匹配依据、过滤原因、邀请终态组件
 │   ├── src/features
 │   ├── src/services
+│   ├── src/stores
 │   ├── src/types
 │   ├── Dockerfile
 │   └── nginx.conf
 ├── backend
 │   ├── cmd/server
+│   ├── internal/constants      # 信用门槛、三项上限、终态、过滤原因常量
 │   ├── internal/controller
-│   ├── internal/repository
-│   ├── internal/service
-│   └── Dockerfile
+│   ├── internal/repository     # 线程安全的邀请存储（互斥锁保证并发幂等）
+│   └── internal/service        # 匹配算法、连续时隙、评分、邀请服务
 ├── database
 │   └── init.sql
 ├── docker-compose.yml
@@ -87,6 +90,9 @@ go run ./cmd/server
 - `GET /api/skills`
 - `GET /api/needs`
 - `GET /api/matches`
+- `GET /api/match-board?viewer=林澈`：匹配页整页数据（匹配依据、过滤原因、邀请终态、未来一周范围）
+- `POST /api/invitations`：发起邀请（请求体 `{viewer, needId, proposedSlot?}`，受信用门槛/同校区/连续时隙/三项上限/重复校验约束）
+- `POST /api/invitations/:id/accept?viewer=孟野`：需求方接受邀请，幂等，重复或并发确认只成功一次
 - `GET /api/appointments`
 - `GET /api/reviews`
 - `GET /api/messages`

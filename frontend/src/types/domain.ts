@@ -25,13 +25,95 @@ export interface Need {
 
 export interface Match {
   id: number;
+  needId: number;
   provider: string;
   learner: string;
+  campus: string;
   offerSkill: string;
   wantedSkill: string;
+  category: string;
   score: number;
   commonSlots: string[];
+  commonBlocks: SlotBlock[];
+  reward: string;
+  basis: string[];
   recommendation: string;
+  viewerInvolved: boolean;
+  viewerCanInvite: boolean;
+}
+
+export interface SlotBlock {
+  weekday: string;
+  parts: string[];
+  slotText: string;
+}
+
+export interface Account {
+  name: string;
+  major: string;
+  campus: string;
+  creditScore: number;
+  creditLevel: string;
+}
+
+export type FilterReasonCode = 'LOW_CREDIT' | 'CAMPUS_MISMATCH' | 'NO_COMMON_SLOT';
+
+export interface FilteredMatch {
+  provider: string;
+  learner: string;
+  campus: string;
+  offerSkill: string;
+  wantedSkill: string;
+  reasonCode: FilterReasonCode;
+  reason: string;
+  commonSlots: string[];
+}
+
+export type InvitationStatus = '待确认' | '已接受' | '已失效';
+
+export interface Invitation {
+  id: number;
+  matchId: number;
+  needId: number;
+  fromUser: string;
+  toUser: string;
+  offerSkill: string;
+  wantedSkill: string;
+  campus: string;
+  proposedSlot: string;
+  status: InvitationStatus;
+  terminal: boolean;
+  createdAtUnix: number;
+  decidedAtUnix?: number;
+  note: string;
+}
+
+export interface MatchBoard {
+  viewer: string;
+  viewerCampus: string;
+  viewerCredit: number;
+  readOnly: boolean;
+  weekStart: string;
+  weekEnd: string;
+  creditThreshold: number;
+  maxActive: number;
+  accounts: Account[];
+  matches: Match[];
+  filtered: FilteredMatch[];
+  invitations: Invitation[];
+  activeCount: number;
+  activeByNeed: Record<string, number>;
+}
+
+export interface InvitationActionResult {
+  invitation: Invitation;
+  accepted: boolean;
+  message: string;
+}
+
+export interface BusinessError {
+  code: string;
+  message: string;
 }
 
 export interface Appointment {

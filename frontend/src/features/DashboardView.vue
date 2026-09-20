@@ -1,6 +1,6 @@
 <template>
   <main class="page-shell" v-loading="loading">
-    <AppHeader :unread="overview?.metrics.unread ?? 0" />
+    <AppHeader :unread="overview?.metrics.unread ?? 0" active="dashboard" @navigate="onNavigate" />
 
     <section v-if="overview" class="metrics-grid">
       <MetricCard label="已发布技能" :value="overview.metrics.skills" />
@@ -93,11 +93,18 @@ import FeatureCard from '../components/FeatureCard.vue';
 import MetricCard from '../components/MetricCard.vue';
 import RadarChart from '../components/RadarChart.vue';
 import { fetchOverview } from '../services/storage.service';
+import { useAppStore } from '../stores/app.store';
 import type { Overview } from '../types/domain';
+
+const app = useAppStore();
 
 const overview = ref<Overview | null>(null);
 const loading = ref(true);
 const error = ref('');
+
+function onNavigate(view: 'dashboard' | 'match'): void {
+  app.setView(view);
+}
 
 onMounted(async () => {
   try {
